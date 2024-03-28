@@ -5,9 +5,38 @@ body {
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  background-color: rgb(241, 244, 246);
 }
 
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
+}
+
+@font-face {
+  font-family: "Glitch";   /*Can be any text*/
+  font-weight: normal;
+  font-style: normal;
+  src: local("glitch"),
+    url("./fonts/glitch.otf") format("opentype");
+}
+
+.MuiDataGrid-row:nth-of-type(even) {
+  background-color: #dadada;
+}
+
+/* .MuiTableCell-root[data-colindex="5"] {
+  text-align: right !important;
+} */
+
+.MuiTableCell-root.MuiTableCell-body {
+  padding: 10px !important;
+}
+
+.MuiTableCell-root.MuiTableCell-head {
+  padding: 10px !important;
+}
+
+.MuiTableCell-root.MuiTableCell-body.MuiTableCell-paddingCheckbox {
+  padding-right: 0 !important;
 }
