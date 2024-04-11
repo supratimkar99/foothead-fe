@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useContext } from 'react';
+import { useParams } from 'react-router-dom';
 import axios from 'axios';
 
 import AddIcon from '@mui/icons-material/Add';
@@ -15,9 +16,9 @@ import MatchesTableCollapsable from './MatchesTableCollapsable';
 import {
   ADD_MATCH_FAILURE_ALERT_TEXT,
   ADD_MATCH_SUCCESS_ALERT_TEXT,
-  ADMIN_LOGIN_FAILURE_ALERT_TEXT,
-  ADMIN_LOGIN_SUCCESS_ALERT_TEXT
+  ADMIN_SESSION_ENDED
 } from '../constants/textConstants';
+import { API_ROOT } from '../constants/apiConstants';
 import { stageIdentifierConstants } from '../constants/matchIdentifierConstants';
 import { ApplicationContext } from '../App';
 
@@ -29,8 +30,6 @@ const styles = {
     zIndex: '101'
   }
 }
-
-const API_ROOT = process.env.REACT_APP_API_ROOT;
 
 const Matches = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -48,12 +47,16 @@ const Matches = () => {
     awayScore: 0
   })
   const [shouldPersistValue, setShouldPersistValue] = useState(true);
-  const [alertType, setAlertType] = useState(null);
   const [loading, setLoading] = useState(false);
   const [showAdminLogin, setShowAdminLogin] = useState(false);
-  const [adminLoginResult, setAdminLoginResult] = useState(null);
+  const [alertData, setAlertData] = useState({
+    type: null,
+    text: null
+  })
 
   const { windowWidth } = useContext(ApplicationContext);
+
+  const { id: playerId } = useParams();
 
   useEffect(() => {
     if (isModalOpen && !tournaments) {
@@ -110,10 +113,15 @@ const Matches = () => {
   }
 
   const addMatchAsyncCall = () => {
-    setAlertType(null);
+    setAlertData({
+      type: null,
+      text: null
+    });
     setLoading(true);
+    const serialNumber = selectedTournament.serialNumber;
+    const formattedTournamentNumber = serialNumber < 10 ? '0' + serialNumber : serialNumber;
     const matchData = {
-      identifier: selectedTournament.serialNumber+'_'+stageIdentifierConstants[selectedStage.type],
+      identifier: formattedTournamentNumber+'_'+stageIdentifierConstants[selectedStage.type],
       stageId: selectedStage.id,
       tournamentId: selectedTournament.id,
       scoreline: {
@@ -129,37 +137,55 @@ const Matches = () => {
         }
       }
     }
-    axios.post(`${API_ROOT}/matches`, matchData)
-      .then((response) => {
-        // Handle the successful response here
-        if (shouldPersistValue) {
-          updateScoreline({
-            homePlayer: null,
-            awayPlayer: null,
-            homeScore: 0,
-            awayScore: 0
-          });
-        } else {
-          handleModalClose();
-          updateScoreline({
-            homePlayer: null,
-            awayPlayer: null,
-            homeScore: 0,
-            awayScore: 0
-          });
-          setSelectedStage(null);
-        }
-        setLoading(false);
-        setAlertType('success');
-        // alert('Match added successfully');
-      })
-      .catch((error) => {
-        setLoading(false);
-        setAlertType('error');
-        // Handle any errors here
-        console.error('Error:', error);
-        // alert('Error while adding match');
+    axios.post(`${API_ROOT}/matches`, matchData, {
+      headers: {
+        'Authorization': `Bearer ${JSON.parse(localStorage.getItem('adminSessionDetails'))?.token}`
+      },
+    })
+    .then((response) => {
+      // Handle the successful response here
+      if (shouldPersistValue) {
+        updateScoreline({
+          homePlayer: null,
+          awayPlayer: null,
+          homeScore: 0,
+          awayScore: 0
+        });
+      } else {
+        handleModalClose();
+        updateScoreline({
+          homePlayer: null,
+          awayPlayer: null,
+          homeScore: 0,
+          awayScore: 0
+        });
+        setSelectedStage(null);
+      }
+      setLoading(false);
+      setAlertData({
+        type: 'success',
+        text: ADD_MATCH_SUCCESS_ALERT_TEXT
       });
+    })
+    .catch((error) => {
+      setLoading(false);
+      // Handle any errors here
+      console.error('Error:', error);
+      if (error.response.status === 401) {
+        localStorage.removeItem('adminSessionDetails');
+        setIsModalOpen(false);
+        setShowAdminLogin(true);
+        setAlertData({
+          type: 'error',
+          text: ADMIN_SESSION_ENDED
+        });
+      } else {
+        setAlertData({
+          type: 'error',
+          text: ADD_MATCH_FAILURE_ALERT_TEXT
+        });
+      }
+    });
   }
 
   const modal = (
@@ -194,12 +220,14 @@ const Matches = () => {
     </Fab>
   );
 
-  const addMatchSnackBar = (
+  const alertSnackBar = (
     <SnackBar
-      alertType={alertType}
-      dismissAlert={() => setAlertType(null)}
-      successAlertText={ADD_MATCH_SUCCESS_ALERT_TEXT}
-      failureAlertText={ADD_MATCH_FAILURE_ALERT_TEXT}
+      alertType={alertData.type}
+      dismissAlert={() => setAlertData({
+        type: null,
+        text: null
+      })}
+      alertText={alertData.text}
     />
   );
 
@@ -210,29 +238,20 @@ const Matches = () => {
   const addSessionDetails = (
     <AddSession
       isModalOpen={showAdminLogin}
-      adminLoginResult={adminLoginResult}
-      setAdminLoginResult={setAdminLoginResult}
+      setAlertData={setAlertData}
       handleModalClose={() => setShowAdminLogin(false)}
       openAddMatchModal={() => setIsModalOpen(true)}
     />
   );
 
-  const adminLoginSnackBar = (
-    <SnackBar
-      alertType={adminLoginResult}
-      dismissAlert={() => setAdminLoginResult(null)}
-      successAlertText={ADMIN_LOGIN_SUCCESS_ALERT_TEXT}
-      failureAlertText={ADMIN_LOGIN_FAILURE_ALERT_TEXT}
-    />
-  );
-
   const matchesTable = (
-    windowWidth > 1000 ? <MatchesTable /> : <MatchesTableCollapsable />
+    windowWidth > 1000 ? <MatchesTable playerId={playerId} /> : <MatchesTableCollapsable playerId={playerId} />
   );
 
+  const playerSuffix = playerId ? ' of '+playerId : null;
   const pageHeader = windowWidth > 600 ? (
     <div style={{ textAlign: 'center' }}>
-      <Typography variant={'h1'} fontFamily={'Glitch'} >Matches</Typography>
+      <Typography variant={'h1'} fontFamily={'Glitch'} >Matches{playerSuffix}</Typography>
     </div>
   ) : null;
 
@@ -240,8 +259,7 @@ const Matches = () => {
     <>
       {addSessionDetails}
       {loadingOverlay}
-      {addMatchSnackBar}
-      {adminLoginSnackBar}
+      {alertSnackBar}
       {modal}
       {addButton}
       {pageHeader}

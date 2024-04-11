@@ -4,9 +4,8 @@ import MUIDataTable from "mui-datatables";
 import Paper from '@mui/material/Paper';
 import Grid from '@mui/material/Grid';
 
+import { API_ROOT } from '../constants/apiConstants';
 import LoadingOverlay from '../utils/LoadingOverlay';
-
-const API_ROOT = process.env.REACT_APP_API_ROOT;
 
 const TournamentsTableCollapsable = () => {
   const [tournaments, setTournaments] = useState(null);
@@ -24,8 +23,8 @@ const TournamentsTableCollapsable = () => {
           tournamentObjectArray.push(tournament.name);
           tournamentObjectArray.push(tournament.format);
           tournamentObjectArray.push(tournament.status);
-          tournamentObjectArray.push(tournament.winner ? (tournament.winner.player + (isTeamIncluded ? ' ('+tournament.winner.team+')' : '')) : null);
-          tournamentObjectArray.push(tournament.runnersUp ? (tournament.runnersUp.player + (isTeamIncluded ? ' ('+tournament.runnersUp.team+')' : '')) : null);
+          tournamentObjectArray.push(tournament.winner ? (tournament.winner.player + (isTeamIncluded ? ' ('+tournament.winner.team+')' : '')) : 'N/A');
+          tournamentObjectArray.push(tournament.runnersUp ? (tournament.runnersUp.player + (isTeamIncluded ? ' ('+tournament.runnersUp.team+')' : '')) : 'N/A');
           tournamentObjectArray.push(tournament.participants?.length);
 
           tournamentData.push(tournamentObjectArray);
@@ -39,12 +38,12 @@ const TournamentsTableCollapsable = () => {
   }, [])
 
   const columns = [
-    { name: 'No.' },
-    { name: 'Tournament', options: { sort: false } },
-    { name: 'Format', options: { display: 'excluded', filter: false } },
-    { name: 'Status', options: { display: 'excluded', filter: false } },
+    { name: 'No.', options: { filter: false } },
+    { name: 'Tournament', options: { sort: false, filter: false } },
+    { name: 'Format', options: { display: 'excluded' } },
+    { name: 'Status', options: { display: 'excluded' } },
     { name: 'Winner', options: { sort: false } },
-    { name: 'Runners Up', options: { display: 'excluded', filter: false } },
+    { name: 'Runners Up', options: { display: 'excluded' } },
     { name: 'Participants', options: { display: 'excluded', filter: false } },
   ];
 

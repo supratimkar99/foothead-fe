@@ -16,6 +16,7 @@ const RouterContainer = () => {
           <Route path="/players" element={<Players />} />
           <Route path="/players/:id" element={<Player />} />
           <Route path="/matches" element={<Matches />} />
+          <Route path="/matches/:id" element={<Matches />} />
           <Route path="/tournaments" element={<Tournaments />} />
         </Route>
       </Routes>

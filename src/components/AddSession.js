@@ -10,6 +10,11 @@ import CloseIcon from '@mui/icons-material/Close';
 import TextField from '@mui/material/TextField';
 
 import { addSessionDetails } from '../utils/validateAdmin';
+import { API_ROOT } from '../constants/apiConstants';
+import {
+  ADMIN_LOGIN_FAILURE_ALERT_TEXT,
+  ADMIN_LOGIN_SUCCESS_ALERT_TEXT,
+} from '../constants/textConstants';
 
 const styles = {
   modalBox: {
@@ -27,14 +32,12 @@ const styles = {
     }
   }
 }
-
-const API_ROOT = process.env.REACT_APP_API_ROOT;
  
 const AddSession = ({
   isModalOpen,
   handleModalClose,
   openAddMatchModal,
-  setAdminLoginResult,
+  setAlertData,
 }) => {
   const [password, setPassword] = useState('');
 
@@ -45,16 +48,22 @@ const AddSession = ({
     axios.post(`${API_ROOT}/matches/authenticate`, payloadData)
       .then((response) => {
         setPassword('');
-        addSessionDetails();
+        addSessionDetails(response.data.token);
         handleModalClose();
         openAddMatchModal();
         // alert for successsful login
-        setAdminLoginResult('success');
+        setAlertData({
+          type: 'success',
+          text: ADMIN_LOGIN_SUCCESS_ALERT_TEXT
+        });
       })
       .catch((error) => {
         setPassword('');
         // alert for password incorrect
-        setAdminLoginResult('error');
+        setAlertData({
+          type: 'error',
+          text: ADMIN_LOGIN_FAILURE_ALERT_TEXT
+        });
       });
   }
   

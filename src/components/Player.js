@@ -1,5 +1,5 @@
 import React, {useState, useEffect} from 'react';
-import { useParams } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
 import axios from 'axios';
 
 import Box from '@mui/material/Box';
@@ -7,17 +7,16 @@ import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import Container from '@mui/material/Container';
 import Grid from '@mui/material/Grid';
-import Link from '@mui/material/Link';
+import MUILink from '@mui/material/Link';
 import EmojiEventsIcon from '@mui/icons-material/EmojiEvents';
 import MilitaryTechIcon from '@mui/icons-material/MilitaryTech';
 import KeyboardDoubleArrowDownIcon from '@mui/icons-material/KeyboardDoubleArrowDown';
 import Typography from '@mui/material/Typography';
 import Skeleton from '@mui/material/Skeleton';
 
+import { API_ROOT } from '../constants/apiConstants';
 import LoadingOverlay from '../utils/LoadingOverlay';
 import { loadStatusConstants } from '../constants/requestStatusConstants';
-
-const API_ROOT = process.env.REACT_APP_API_ROOT;
 
 const styles = {
   cardStyle: {
@@ -92,6 +91,18 @@ const Player = () => {
       </Grid>
     )
   });
+
+  individualStats && individualStats.push(
+    <Grid item xs={12}>
+        <Box sx={{ justifyContent: 'center', mt: 1 }}>
+          <Link to={`/matches/${id}`}>
+            <Typography variant={'h6'}>
+              View {id}'s Matches
+            </Typography>
+          </Link>
+        </Box>
+      </Grid>
+  );
 
   const loadingCards = () => {
     const skeletonElements = [];
@@ -199,7 +210,7 @@ const Player = () => {
   )
 
   const loadPlayerDataLink = matchStats.loadStatus === loadStatusConstants.NOT_REQUESTED ? (
-    <Link
+    <MUILink
       component="button"
       variant="button"
       underline='hover'
@@ -210,7 +221,7 @@ const Player = () => {
       <KeyboardDoubleArrowDownIcon />
       &nbsp; Click Here to load Match Stats &nbsp;
       <KeyboardDoubleArrowDownIcon />
-    </Link>
+    </MUILink>
   ) : null;
 
   const content = playerData ? (

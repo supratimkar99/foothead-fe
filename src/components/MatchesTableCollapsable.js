@@ -1,18 +1,19 @@
 import React, {useState, useEffect}  from 'react'
 import axios from 'axios';
 import MUIDataTable from "mui-datatables";
-import Paper from '@mui/material/Paper';
 import Grid from '@mui/material/Grid';
+import Paper from '@mui/material/Paper';
+import Typography from '@mui/material/Typography';
 
+import { API_ROOT } from '../constants/apiConstants';
 import LoadingOverlay from '../utils/LoadingOverlay';
 
-const API_ROOT = process.env.REACT_APP_API_ROOT;
-
-const MatchesTableCollapsable = () => {
+const MatchesTableCollapsable = ({ playerId }) => {
   const [matches, setMatches] = useState(null);
 
   useEffect(() => {
-    axios.get(`${API_ROOT}/matches`)
+    const queryParamms = playerId ? `?player=${playerId}` : '';
+    axios.get(`${API_ROOT}/matches${queryParamms}`)
       .then((response) => {
         // Handle the successful response here
         let matchData = [];
@@ -35,15 +36,15 @@ const MatchesTableCollapsable = () => {
         // Handle any errors here
         console.error('Error:', error);
       });
-  }, []);
+  }, [playerId]);
 
   const columns = [
     { name: 'MatchId', options: { display: 'excluded', filter: false } },
-    { name: 'Tournament', options: { display: 'excluded', filter: false } },
-    { name: 'Stage', options: { display: 'excluded', filter: false } },
-    { name: 'Winner', options: { display: 'excluded', filter: false } },
+    { name: 'Tournament', options: { display: 'excluded' } },
+    { name: 'Stage', options: { display: 'excluded' } },
+    { name: 'Winner', options: { display: 'excluded' } },
     { name: 'Home', options: { sort: false } },
-    { name: 'Score', options: { sort: false } },
+    { name: 'Score', options: { sort: false, filter: false } },
     { name: 'Away', options: { sort: false } },
     { name: 'Identifier', options: { display: 'excluded', filter: false } }
   ];
@@ -92,8 +93,13 @@ const MatchesTableCollapsable = () => {
     />
   ) : <LoadingOverlay isOpen={true} />;
 
+  const pageHeader = playerId ? (
+    <Typography variant={'h5'} sx={{ pt: 1, pb: 1}} ><b>{playerId}'s Matches</b></Typography>
+  ) : null;
+
   return (
     <div style={{ textAlign: '-webkit-center' }}>
+      {pageHeader}
       {DataTable}
     </div>
   )

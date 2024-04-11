@@ -5,8 +5,7 @@ import Alert from '@mui/material/Alert';
 const SnackBar = ({
   alertType, 
   dismissAlert,
-  successAlertText,
-  failureAlertText
+  alertText
 }) => {
 
   const handleClose = (event, reason) => {
@@ -17,8 +16,6 @@ const SnackBar = ({
     dismissAlert();
   };
 
-  const selectedText = alertType === 'success' ? successAlertText : failureAlertText;
-
   const alert = (
     <Alert
       onClose={handleClose}
@@ -26,7 +23,7 @@ const SnackBar = ({
       variant={'filled'}
       sx={{ width: '100%' }}
     >
-      {selectedText}
+      {alertText}
     </Alert>
   )
 

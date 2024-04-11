@@ -1,16 +1,17 @@
 import React, {useState, useEffect}  from 'react'
 import axios from 'axios';
-import { DataGrid } from '@mui/x-data-grid';
+import { DataGrid, GridToolbar } from '@mui/x-data-grid';
 
+import { API_ROOT } from '../constants/apiConstants';
 import LoadingOverlay from '../utils/LoadingOverlay';
 
-const API_ROOT = process.env.REACT_APP_API_ROOT;
-
-const MatchesTable = () => {
+const MatchesTable = ({ playerId }) => {
   const [matches, setMatches] = useState(null);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    axios.get(`${API_ROOT}/matches`)
+    const queryParamms = playerId ? `?player=${playerId}` : '';
+    axios.get(`${API_ROOT}/matches${queryParamms}`)
       .then((response) => {
         // Handle the successful response here
         let matchData = [];
@@ -31,42 +32,49 @@ const MatchesTable = () => {
           matchData.push(matchObject);
         }
         setMatches(matchData);
+        setLoading(false);
       })
       .catch((error) => {
         // Handle any errors here
         console.error('Error:', error);
       });
-  }, [])
+  }, [playerId])
 
   const columns = [
     { field: 'tournament', headerName: 'Tournament', width: 200, sortable: false },
     { field: 'stage', headerName: 'Stage', width: 150, sortable: false },
     { field: 'home', headerName: 'Home', width: 150, sortable: false, align: 'right', headerAlign: 'right' },
-    { field: 'homeScore', headerName: 'Score', width: 50, sortable: false, align: 'center' },
-    { field: 'divider', headerName: ' ', width: 5, sortable: false, filterable: false, align: 'center' },
-    { field: 'awayScore', headerName: 'Score', width: 50, sortable: false, align: 'center' },
+    { field: 'homeScore', headerName: 'Score', width: 60, sortable: false, align: 'center', filterable: false },
+    { field: 'divider', headerName: ' ', width: 5, sortable: false, align: 'center', filterable: false },
+    { field: 'awayScore', headerName: 'Score', width: 60, sortable: false, align: 'center', filterable: false },
     { field: 'away', headerName: 'Away', width: 150, sortable: false },
     { field: 'winner', headerName: 'Winner', width: 150, sortable: false },
     { field: 'identifier', headerName: 'Identifier', width: 150, filterable: false },
   ];
   
-  const DataTable = matches ? (
+  const DataTable = (
     <DataGrid
-      rows={matches}
+      disableColumnMenu
+      rows={matches || []}
       columns={columns}
-      initialState={{
-        pagination: {
-          paginationModel: { page: 0, pageSize: 10 },
-        },
-      }}
-      pageSizeOptions={[5, 10, 15, 20]}
+      // initialState={{
+      //   pagination: {
+      //     paginationModel: { page: 0, pageSize: 10 },
+      //   },
+      // }}
+      autoPageSize
+      pageSizeOptions={[5, 10, 15, 25, 50]}
       sx={{ width: 'max-content', pl:1, pr: 1, mb:2 }}
       disableRowSelectionOnClick
+      disableColumnSelector
+      slots={{ toolbar: GridToolbar }}
     />
-  ) : <LoadingOverlay isOpen={true} />;
+  );
 
+  const windowHeight = loading ? 'auto' : (window.innerHeight * 0.8);
   return (
-    <div style={{ textAlign: '-webkit-center' }}>
+    <div style={{ textAlign: '-webkit-center', height: windowHeight }}>
+      <LoadingOverlay isOpen={loading} />
       {DataTable}
     </div>
   )

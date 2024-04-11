@@ -14,14 +14,16 @@ const Tournaments = () => {
   );
 
   const pageHeader = windowWidth > 600 ? (
-    <Typography variant={'h1'} fontFamily={'Glitch'} >Touraments</Typography>
+    <div style={{ textAlign: 'center' }}>
+      <Typography variant={'h1'} fontFamily={'Glitch'} >Touraments</Typography>
+    </div>
   ) : null;
 
   return (
-    <div style={{ textAlign: '-webkit-center' }}>
+    <>
       {pageHeader}
       {tournamnetsTable}
-    </div>
+    </>
   )
 }
 
