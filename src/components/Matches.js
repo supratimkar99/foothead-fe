@@ -18,9 +18,10 @@ import {
   ADD_MATCH_SUCCESS_ALERT_TEXT,
   ADMIN_SESSION_ENDED
 } from '../constants/textConstants';
-import { API_ROOT } from '../constants/apiConstants';
 import { stageIdentifierConstants } from '../constants/matchIdentifierConstants';
 import { ApplicationContext } from '../App';
+
+const API_ROOT = process.env.REACT_APP_API_ROOT;
 
 const styles = {
   addButton: {

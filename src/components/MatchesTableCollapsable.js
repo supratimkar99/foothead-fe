@@ -5,8 +5,9 @@ import Grid from '@mui/material/Grid';
 import Paper from '@mui/material/Paper';
 import Typography from '@mui/material/Typography';
 
-import { API_ROOT } from '../constants/apiConstants';
 import LoadingOverlay from '../utils/LoadingOverlay';
+
+const API_ROOT = process.env.REACT_APP_API_ROOT;
 
 const MatchesTableCollapsable = ({ playerId }) => {
   const [matches, setMatches] = useState(null);

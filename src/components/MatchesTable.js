@@ -2,8 +2,9 @@ import React, {useState, useEffect}  from 'react'
 import axios from 'axios';
 import { DataGrid, GridToolbar } from '@mui/x-data-grid';
 
-import { API_ROOT } from '../constants/apiConstants';
 import LoadingOverlay from '../utils/LoadingOverlay';
+
+const API_ROOT = process.env.REACT_APP_API_ROOT;
 
 const MatchesTable = ({ playerId }) => {
   const [matches, setMatches] = useState(null);

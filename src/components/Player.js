@@ -14,9 +14,10 @@ import KeyboardDoubleArrowDownIcon from '@mui/icons-material/KeyboardDoubleArrow
 import Typography from '@mui/material/Typography';
 import Skeleton from '@mui/material/Skeleton';
 
-import { API_ROOT } from '../constants/apiConstants';
 import LoadingOverlay from '../utils/LoadingOverlay';
 import { loadStatusConstants } from '../constants/requestStatusConstants';
+
+const API_ROOT = process.env.REACT_APP_API_ROOT;
 
 const styles = {
   cardStyle: {

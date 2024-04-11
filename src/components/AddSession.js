@@ -10,7 +10,6 @@ import CloseIcon from '@mui/icons-material/Close';
 import TextField from '@mui/material/TextField';
 
 import { addSessionDetails } from '../utils/validateAdmin';
-import { API_ROOT } from '../constants/apiConstants';
 import {
   ADMIN_LOGIN_FAILURE_ALERT_TEXT,
   ADMIN_LOGIN_SUCCESS_ALERT_TEXT,
@@ -32,6 +31,8 @@ const styles = {
     }
   }
 }
+
+const API_ROOT = process.env.REACT_APP_API_ROOT;
  
 const AddSession = ({
   isModalOpen,

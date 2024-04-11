@@ -4,8 +4,9 @@ import MUIDataTable from "mui-datatables";
 import Paper from '@mui/material/Paper';
 import Grid from '@mui/material/Grid';
 
-import { API_ROOT } from '../constants/apiConstants';
 import LoadingOverlay from '../utils/LoadingOverlay';
+
+const API_ROOT = process.env.REACT_APP_API_ROOT;
 
 const TournamentsTableCollapsable = () => {
   const [tournaments, setTournaments] = useState(null);
