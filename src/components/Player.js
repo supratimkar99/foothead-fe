@@ -83,7 +83,7 @@ const Player = () => {
 
   const individualStats = matchStats.matchStatsData && Object.entries(matchStats.matchStatsData).map(([key, value]) => {
     return (
-      <Grid item sm={4} xs={12}>
+      <Grid item sm={4} xs={12} key={key}>
         <Box sx={{ display: 'flex', justifyContent: 'left', pl: 5 }}>
           <Typography variant={'h5'}>
           <><b>{key}</b>:&nbsp;{value}</>
@@ -94,7 +94,7 @@ const Player = () => {
   });
 
   individualStats && individualStats.push(
-    <Grid item xs={12}>
+    <Grid item xs={12} key={'playerMatchesLink'}>
         <Box sx={{ justifyContent: 'center', mt: 1 }}>
           <Link to={`/matches/${id}`}>
             <Typography variant={'h6'}>

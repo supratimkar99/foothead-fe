@@ -29,7 +29,7 @@ const styles = {
 
 const gridItemIndividual = ( name ) => {
   return (
-    <Grid item sm={4} xs={12}>
+    <Grid item sm={4} xs={12} key={name}>
       <Link to={`/players/${name}`} style={{ textDecoration: 'none' }}>
         <Card raised={true} >
           <CardActionArea>
