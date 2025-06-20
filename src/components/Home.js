@@ -11,6 +11,8 @@ import Grid from "@mui/material/Grid";
 import Typography from '@mui/material/Typography';
 import { ApplicationContext } from '../App';
 
+const MEDIA_CDN_ROOT = process.env.REACT_APP_MEDIA_CDN_ROOT;
+
 const styles = {
   media: {
     height: "inherit",
@@ -30,7 +32,7 @@ const gridItemIndividual = ( name, imageNameSuffix ) => {
           <CardActionArea>
             <CardMedia
               component="img"
-              src={require(`../../public/media/${name}_bgm${imageNameSuffix}.webp`)}
+              src={`${MEDIA_CDN_ROOT}/${name}_bgm${imageNameSuffix}.webp`}
               alt={name}
               style={styles.media}
             />
