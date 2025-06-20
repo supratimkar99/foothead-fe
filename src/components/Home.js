@@ -30,7 +30,7 @@ const gridItemIndividual = ( name, imageNameSuffix ) => {
           <CardActionArea>
             <CardMedia
               component="img"
-              src={require(`../../public/media/${name}_bgm${imageNameSuffix}.jpg`)}
+              src={require(`../../public/media/${name}_bgm${imageNameSuffix}.webp`)}
               alt={name}
               style={styles.media}
             />

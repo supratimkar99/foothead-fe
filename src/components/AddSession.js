@@ -67,6 +67,15 @@ const AddSession = ({
         });
       });
   }
+
+  const handleKeyDown = (e) => {
+    if (e.key === 'Enter') {
+      // Prevent the default behavior of the Enter key (form submission)
+      e.preventDefault();
+      // Trigger button click when Enter key is pressed
+      handleClick();
+    }
+  };
   
   const closeButton = (
     <div style={{
@@ -105,6 +114,7 @@ const AddSession = ({
           onChange={(event) => {
             setPassword(event.target.value);
           }}
+          onKeyDown={handleKeyDown}
         />
         <br />
         <Button

@@ -46,7 +46,7 @@ const MatchesTable = ({ playerId }) => {
     { field: 'stage', headerName: 'Stage', width: 150, sortable: false },
     { field: 'home', headerName: 'Home', width: 150, sortable: false, align: 'right', headerAlign: 'right' },
     { field: 'homeScore', headerName: 'Score', width: 60, sortable: false, align: 'center', filterable: false },
-    { field: 'divider', headerName: ' ', width: 5, sortable: false, align: 'center', filterable: false },
+    { field: 'divider', headerName: ' ', width: 1, sortable: false, align: 'center', filterable: false },
     { field: 'awayScore', headerName: 'Score', width: 60, sortable: false, align: 'center', filterable: false },
     { field: 'away', headerName: 'Away', width: 150, sortable: false },
     { field: 'winner', headerName: 'Winner', width: 150, sortable: false },
@@ -58,13 +58,13 @@ const MatchesTable = ({ playerId }) => {
       disableColumnMenu
       rows={matches || []}
       columns={columns}
-      // initialState={{
-      //   pagination: {
-      //     paginationModel: { page: 0, pageSize: 10 },
-      //   },
-      // }}
-      autoPageSize
-      pageSizeOptions={[5, 10, 15, 25, 50]}
+      initialState={{
+        pagination: {
+          paginationModel: { page: 0, pageSize: 25 },
+        },
+      }}
+      // autoPageSize
+      pageSizeOptions={[5, 10, 15, 25, 50, 100]}
       sx={{ width: 'max-content', pl:1, pr: 1, mb:2 }}
       disableRowSelectionOnClick
       disableColumnSelector

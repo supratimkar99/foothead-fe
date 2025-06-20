@@ -2,13 +2,16 @@ import React, { useContext } from 'react'
 import { AppBar } from '@mui/material';
 import Breadcrumbs from '@mui/material/Breadcrumbs';
 import Link from '@mui/material/Link';
-import Typography from '@mui/material/Typography';
 import NavigateNextIcon from '@mui/icons-material/NavigateNext';
+import Slide from '@mui/material/Slide';
+import Typography from '@mui/material/Typography';
+import useScrollTrigger from '@mui/material/useScrollTrigger';
 import {
   Link as RouterLink,
   useLocation,
   Outlet,
 } from 'react-router-dom';
+
 import { ApplicationContext } from '../App';
 
 const breadcrumbNameMap = {
@@ -19,6 +22,17 @@ const breadcrumbNameMap = {
 
 function LinkRouter(props) {
   return <Link {...props} component={RouterLink}/>;
+}
+
+const HideOnScroll = (props) => {
+  const { children } = props;
+  const trigger = useScrollTrigger();
+
+  return (
+    <Slide appear={false} direction="down" in={!trigger}>
+      {children}
+    </Slide>
+  );
 }
 
 const NavBar = () => {
@@ -40,36 +54,38 @@ const NavBar = () => {
     <Typography variant={'h3'} fontFamily={'Glitch'} sx={{ mr: '30px' }} >FH</Typography>;
   return (
     <>
-      <AppBar
-        style={{ paddingLeft: marginValue, backgroundColor: '#01021c', display: '-webkit-box', WebkitBoxAlign: 'center' }}
-        position={'sticky'}
-      >
-        <LinkRouter to="/" style={{ textDecoration: 'none', color: 'white' }}>
-          {appLogo}
-        </LinkRouter>
-        <Breadcrumbs aria-label="breadcrumb" separator={<NavigateNextIcon fontSize="medium" sx={{ color: 'white' }} />}>
-          {homeBreadcrumb}
-          {pathnames.map((value, index) => {
-          const last = index === pathnames.length - 1;
-          const to = `/${pathnames.slice(0, index + 1).join('/')}`;
+      <HideOnScroll>
+        <AppBar
+          style={{ paddingLeft: marginValue, backgroundColor: '#01021c', display: '-webkit-box', WebkitBoxAlign: 'center' }}
+          position={'sticky'}
+        >
+          <LinkRouter to="/" style={{ textDecoration: 'none', color: 'white' }}>
+            {appLogo}
+          </LinkRouter>
+          <Breadcrumbs aria-label="breadcrumb" separator={<NavigateNextIcon fontSize="medium" sx={{ color: 'white' }} />}>
+            {homeBreadcrumb}
+            {pathnames.map((value, index) => {
+            const last = index === pathnames.length - 1;
+            const to = `/${pathnames.slice(0, index + 1).join('/')}`;
 
-          return last ? (
-            <Typography fontWeight='bold' color="#02faf6" key={to}>
-              {breadcrumbNameMap[to] || value}
-            </Typography>
-          ) : (
-            <LinkRouter to={to} key={to} style={{ textDecoration: 'none' }}>
-              <Typography fontWeight='regular' color="white" key={to}>
+            return last ? (
+              <Typography fontWeight='bold' color="#02faf6" key={to}>
                 {breadcrumbNameMap[to] || value}
               </Typography>
-            </LinkRouter>
-          );
-          })}
-        </Breadcrumbs>
-      </AppBar>
+            ) : (
+              <LinkRouter to={to} key={to} style={{ textDecoration: 'none' }}>
+                <Typography fontWeight='regular' color="white" key={to}>
+                  {breadcrumbNameMap[to] || value}
+                </Typography>
+              </LinkRouter>
+            );
+            })}
+          </Breadcrumbs>
+        </AppBar>
+      </HideOnScroll>
       <Outlet/>
     </>
   )
 }
 
-export default NavBar
+export default NavBar;

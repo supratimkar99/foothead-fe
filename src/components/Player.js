@@ -246,12 +246,3 @@ const Player = () => {
 }
 
 export default Player;
-
-/*
-<Typography variant={'h5'} fontWeight={'bold'}>ID : {playerData._id}</Typography>
-<Typography variant={'h5'} fontWeight={'bold'}>Player Name : {playerData.fullname}</Typography>
-<Typography variant={'h5'} fontWeight={'bold'}>Tournaments Played : {playerData.tournamentsData.played}</Typography>
-<Typography variant={'h5'} fontWeight={'bold'}> Tournaments Won : {playerData.tournamentsData.won}</Typography>
-<Typography variant={'h5'} fontWeight={'bold'}>Reached Final : {playerData.tournamentsData.finalist}</Typography>
-{trophiesWon.length ? <Typography variant={'h5'} fontWeight={'bold'}>Trophies : </Typography>  : null} {trophiesWon}
-*/

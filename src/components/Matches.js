@@ -246,12 +246,12 @@ const Matches = () => {
   );
 
   const matchesTable = (
-    windowWidth > 1000 ? <MatchesTable playerId={playerId} /> : <MatchesTableCollapsable playerId={playerId} />
+    windowWidth > 600 ? <div style={{ paddingBottom: '5px' }}><MatchesTable playerId={playerId} /></div> : <MatchesTableCollapsable playerId={playerId} />
   );
 
   const playerSuffix = playerId ? ' of '+playerId : null;
   const pageHeader = windowWidth > 600 ? (
-    <div style={{ textAlign: 'center' }}>
+    <div style={{ textAlign: 'center', margin: '-5px 0px' }}>
       <Typography variant={'h1'} fontFamily={'Glitch'} >Matches{playerSuffix}</Typography>
     </div>
   ) : null;
