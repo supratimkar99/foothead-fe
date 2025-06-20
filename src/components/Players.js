@@ -14,6 +14,7 @@ import Typography from '@mui/material/Typography';
 import LoadingOverlay from '../utils/LoadingOverlay';
 import { ApplicationContext } from '../App';
 
+const NODE_ENV = process.env.REACT_APP_NODE_ENV;
 const API_ROOT = process.env.REACT_APP_API_ROOT;
 const MEDIA_CDN_ROOT = process.env.REACT_APP_MEDIA_CDN_ROOT;
 
@@ -36,7 +37,10 @@ const gridItemIndividual = ( name ) => {
           <CardActionArea>
             <CardMedia
               component="img"
-              src={`${MEDIA_CDN_ROOT}/player_${name}.webp`}
+              src={ NODE_ENV === 'development' ?
+                require(`../../public/media/player_${name}.webp`) :
+                `${MEDIA_CDN_ROOT}/player_${name}.webp`
+              }
               alt="Players"
               height='250'
               // style={styles.media}

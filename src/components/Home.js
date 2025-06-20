@@ -11,6 +11,7 @@ import Grid from "@mui/material/Grid";
 import Typography from '@mui/material/Typography';
 import { ApplicationContext } from '../App';
 
+const NODE_ENV = process.env.REACT_APP_NODE_ENV;
 const MEDIA_CDN_ROOT = process.env.REACT_APP_MEDIA_CDN_ROOT;
 
 const styles = {
@@ -32,7 +33,10 @@ const gridItemIndividual = ( name, imageNameSuffix ) => {
           <CardActionArea>
             <CardMedia
               component="img"
-              src={`${MEDIA_CDN_ROOT}/${name}_bgm${imageNameSuffix}.webp`}
+              src={ NODE_ENV === 'development' ?
+                require(`../../public/media/${name}_bgm${imageNameSuffix}.webp`) :
+                `${MEDIA_CDN_ROOT}/${name}_bgm${imageNameSuffix}.webp`
+              }
               alt={name}
               style={styles.media}
             />
